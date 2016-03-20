@@ -26,6 +26,10 @@ public class RegExGeneratorTest {
                     (item1, item2) -> item1 && item2);
     }
 
+    @Test
+    public void testTrivialTest(){
+        assertTrue(validate(".",1));
+    }
     //TODO: Uncomment these tests
     /*
     @Test
