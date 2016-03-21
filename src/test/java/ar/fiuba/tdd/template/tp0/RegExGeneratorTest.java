@@ -10,11 +10,11 @@ import static org.junit.Assert.assertTrue;
 
 public class RegExGeneratorTest {
 
+    private final int maxOcurrences = 10;
+
     private boolean validate(String regEx, int numberOfResults) {
-        RegExGenerator generator = new RegExGenerator();
-        // TODO: Uncomment parameters
-        List<String> results = generator.generate(/*regEx, numberOfResults*/);
-        // force matching the beginning and the end of the strings
+        RegExGenerator generator = new RegExGenerator(maxOcurrences);
+        List<String> results = generator.generate(regEx, numberOfResults);
         Pattern pattern = Pattern.compile("^" + regEx + "$");
         return results
                 .stream()
@@ -27,14 +27,38 @@ public class RegExGeneratorTest {
     }
 
     @Test
-    public void testTrivialTest(){
-        assertTrue(validate(".",1));
-    }
-    //TODO: Uncomment these tests
-    /*
-    @Test
     public void testAnyCharacter() {
         assertTrue(validate(".", 1));
+    }
+    
+    @Test
+    public void testParserOnlyLiterals() {
+        RegexParser parser = new RegexParser(100);
+        assertTrue(parser.parse("abc").size() == 3);
+    }
+    
+    @Test
+    public void testParserLiteralsAndQuantifications() {
+        RegexParser parser = new RegexParser(100);
+        assertTrue(parser.parse("\\++hola?").size() == 5);
+    }
+
+    @Test
+    public void testParserSets() {
+        RegexParser parser = new RegexParser(100);
+        assertTrue(parser.parse("[abC]\\.od").size() == 4);
+    }
+
+    @Test
+    public void testParserSetsComplex() {
+        RegexParser parser = new RegexParser(100);
+        assertTrue(parser.parse("[a\\]C].od").size() == 4);
+    }
+
+    @Test
+    public void testParserComplexRegex() {
+        RegexParser parser = new RegexParser(100);
+        assertTrue(parser.parse("\\[h*[abC423]?\\.+\\@?").size() == 5);
     }
 
     @Test
@@ -66,6 +90,24 @@ public class RegExGeneratorTest {
     public void testCharacterSetWithQuantifiers() {
         assertTrue(validate("[abc]+", 1));
     }
-    */
-    // TODO: Add more tests!!!
+    
+    @Test
+    public void testComplexRegex1() {
+        assertTrue(validate("\\++hola?", 1));
+    }
+    
+    @Test
+    public void testComplexRegex2() {
+        assertTrue(validate("\\[h*[abC423]?\\.+\\@?", 1));
+    }
+    
+    @Test
+    public void testComplexRegex3() {
+        assertTrue(validate("[abC]\\.od", 1));
+    }
+    
+    @Test
+    public void testComplexRegex4() {
+        assertTrue(validate("[a\\]C].od", 1));
+    }
 }
