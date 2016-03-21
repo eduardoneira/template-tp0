@@ -1,22 +1,25 @@
 package ar.fiuba.tdd.template.tp0;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by eduu on 20/03/16.
  */
 public class RegexParser {
-    private int maxNumber;
+    private static final List QUANTIFIERS = new ArrayList<Character>(){
+        {
+            add('+');
+            add('?');
+            add('*');
+        }
+    };
 
-    public RegexParser(int number) {
-        super();
-        this.maxNumber = number;
-    }
-
-    public ArrayList<Token> parse(String regex) {
+    //Main method, returns a list of tokens
+    public ArrayList<Token> parse(String regex, int maxNumber) {
         ArrayList<Token> tokens = new ArrayList<Token>();
         int offset = 0;
-        int newOffset = 0;
+        int newOffset;
         int regexLength = regex.length();
 
         while (offset < regexLength) {
@@ -29,7 +32,7 @@ public class RegexParser {
                 newOffset = read(regex,offset);
             }
 
-            tokens.add(new Token(regex.substring(offset,newOffset),this.maxNumber));
+            tokens.add(new Token(regex.substring(offset,newOffset),maxNumber));
             offset = newOffset;
         }
 
@@ -59,7 +62,7 @@ public class RegexParser {
     private int checkForQuantifier(String regex, int index) {
         try {
             char character = regex.charAt(index);
-            if (character == '+' || character == '?' || character == '*') {
+            if (QUANTIFIERS.contains(character)) {
                 return 1;
             } else {
                 return 0;

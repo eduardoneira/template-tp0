@@ -33,32 +33,32 @@ public class RegExGeneratorTest {
     
     @Test
     public void testParserOnlyLiterals() {
-        RegexParser parser = new RegexParser(100);
-        assertTrue(parser.parse("abc").size() == 3);
+        RegexParser parser = new RegexParser();
+        assertTrue(parser.parse("abc",100).size() == 3);
     }
     
     @Test
     public void testParserLiteralsAndQuantifications() {
-        RegexParser parser = new RegexParser(100);
-        assertTrue(parser.parse("\\++hola?").size() == 5);
+        RegexParser parser = new RegexParser();
+        assertTrue(parser.parse("\\++hola?",100).size() == 5);
     }
 
     @Test
     public void testParserSets() {
-        RegexParser parser = new RegexParser(100);
-        assertTrue(parser.parse("[abC]\\.od").size() == 4);
+        RegexParser parser = new RegexParser();
+        assertTrue(parser.parse("[abC]\\.od",100).size() == 4);
     }
 
     @Test
     public void testParserSetsComplex() {
-        RegexParser parser = new RegexParser(100);
-        assertTrue(parser.parse("[a\\]C].od").size() == 4);
+        RegexParser parser = new RegexParser();
+        assertTrue(parser.parse("[a\\]C].od",100).size() == 4);
     }
 
     @Test
     public void testParserComplexRegex() {
-        RegexParser parser = new RegexParser(100);
-        assertTrue(parser.parse("\\[h*[abC423]?\\.+\\@?").size() == 5);
+        RegexParser parser = new RegexParser();
+        assertTrue(parser.parse("\\[h*[abC423]?\\.+\\@?",100).size() == 5);
     }
 
     @Test

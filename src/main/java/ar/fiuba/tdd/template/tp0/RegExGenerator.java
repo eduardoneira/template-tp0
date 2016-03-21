@@ -12,8 +12,8 @@ public class RegExGenerator {
 
     //First I parse the regEx to get all the tokens and then I proceed to generate strings for them
     public List<String> generate(String regEx, int numberOfResults) {
-        RegexParser parser = new RegexParser(maxLength);
-        ArrayList<Token> regexAsTokens = parser.parse(regEx);
+        RegexParser parser = new RegexParser();
+        ArrayList<Token> regexAsTokens = parser.parse(regEx,maxLength);
         ArrayList<String> strings = new ArrayList<String>();
 
         for (int i = 0; i < numberOfResults; i++) {

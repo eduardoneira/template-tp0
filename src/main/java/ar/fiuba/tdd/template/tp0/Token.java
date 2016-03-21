@@ -1,6 +1,7 @@
 package ar.fiuba.tdd.template.tp0;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -10,16 +11,22 @@ public class Token {
     private ArrayList<String> characters;
     private int quantificationMaxValue;
     private int quantificationMinValue;
-    private boolean isASpecialCharacter;
+    //Apparently not all ascii are suitable for a regex '.', I found these three
+    //but there may be more
+    private static final List INVALIDASCIICHARACTERS = new ArrayList<Integer>(){
+        {
+            add(10);
+            add(13);
+            add(133);
+        }
+    };
 
     // This constructor sets the available characters of the string and its quantification
-    // The specialCharacter boolean is used to know whether the regex refers to the literal or not
+    // the list of characters remains empty in case the token is a '.'
     public Token(String regex, int maxNumber) {
         this.characters = new ArrayList<>();
-        this.isASpecialCharacter = false;
 
         if (regex.charAt(0) == '\\') {
-            this.isASpecialCharacter = true;
             characters.add(regex.substring(1,2));
             if (regex.length() == 3) {
                 this.setQuantifiers(regex.charAt(regex.length() - 1),maxNumber);
@@ -30,7 +37,9 @@ public class Token {
             this.addSet(regex);
             this.setQuantifiers(regex.charAt(regex.length() - 1),maxNumber);
         } else {
-            characters.add(regex.substring(0,1));
+            if (regex.charAt(0) != '.') {
+                characters.add(regex.substring(0, 1));
+            }
             this.setQuantifiers(regex.charAt(regex.length() - 1),maxNumber);
         }
     }
@@ -44,7 +53,7 @@ public class Token {
                 int index = this.getRandomNumberBetween(0,numberOfCharacters - 1);
                 matchingString = matchingString.concat(this.characters.get(index));
             } else {
-                if (!this.isASpecialCharacter && this.characters.get(0) == ".") {
+                if (numberOfCharacters == 0) {
                     char character = this.getRandomAscii();
                     matchingString = matchingString.concat(String.valueOf(character));
                 } else {
@@ -102,9 +111,7 @@ public class Token {
     private char getRandomAscii() {
         int  asciiNumber = this.getRandomNumberBetween(0,255);
 
-        //Apparently not all ascii are suitable for a regex '.', I found these three
-        //but there may be more
-        while (asciiNumber == 10 || asciiNumber == 13 || asciiNumber == 133) {
+        while (INVALIDASCIICHARACTERS.contains(asciiNumber)) {
             asciiNumber = this.getRandomNumberBetween(0,255);
         }
         return (char) asciiNumber;
