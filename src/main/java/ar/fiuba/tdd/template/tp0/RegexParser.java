@@ -13,8 +13,8 @@ public class RegexParser {
         this.maxNumber = number;
     }
 
-    public ArrayList<Pattern> parse(String regex) {
-        ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+    public ArrayList<Token> parse(String regex) {
+        ArrayList<Token> tokens = new ArrayList<Token>();
         int offset = 0;
         int newOffset = 0;
         int regexLength = regex.length();
@@ -29,17 +29,18 @@ public class RegexParser {
                 newOffset = read(regex,offset);
             }
 
-            patterns.add(new Pattern(regex.substring(offset,newOffset),this.maxNumber));
+            tokens.add(new Token(regex.substring(offset,newOffset),this.maxNumber));
             offset = newOffset;
         }
 
-        return patterns;
+        return tokens;
     }
 
     private int read(String regex, int offset) {
         return offset + 1 + this.checkForQuantifier(regex,offset + 1);
     }
 
+    //Considers the possibility of a literal \\]
     private int readSet(String regex, int offset) {
         int newOffset = regex.indexOf("]",offset);
 
@@ -54,6 +55,7 @@ public class RegexParser {
         return offset + 2 + this.checkForQuantifier(regex,offset + 2);
     }
 
+    //if the function catches the exception, it's because it reached the end of the string
     private int checkForQuantifier(String regex, int index) {
         try {
             char character = regex.charAt(index);

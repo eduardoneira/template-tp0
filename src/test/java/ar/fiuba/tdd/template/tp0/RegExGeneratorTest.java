@@ -110,4 +110,9 @@ public class RegExGeneratorTest {
     public void testComplexRegex4() {
         assertTrue(validate("[a\\]C].od", 1));
     }
+
+    @Test
+    public void testRegexMultipleStrings() {
+        assertTrue(validate("abc",5));
+    }
 }

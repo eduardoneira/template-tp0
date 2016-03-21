@@ -10,14 +10,15 @@ public class RegExGenerator {
         this.maxLength = maxLength;
     }
 
-    public List<String> generate(String regEx, int numberOfResuls) {
+    //First I parse the regEx to get all the tokens and then I proceed to generate strings for them
+    public List<String> generate(String regEx, int numberOfResults) {
         RegexParser parser = new RegexParser(maxLength);
-        ArrayList<Pattern> regexAsPatterns = parser.parse(regEx);
+        ArrayList<Token> regexAsTokens = parser.parse(regEx);
         ArrayList<String> strings = new ArrayList<String>();
 
-        for (int i = 0; i < numberOfResuls; i++) {
+        for (int i = 0; i < numberOfResults; i++) {
             String currentString = "";
-            for ( Pattern elem : regexAsPatterns) {
+            for ( Token elem : regexAsTokens) {
                 currentString = currentString.concat(elem.generateMatchingString());
             }
             strings.add(currentString);

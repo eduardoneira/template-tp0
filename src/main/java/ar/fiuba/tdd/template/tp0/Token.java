@@ -6,18 +6,20 @@ import java.util.Random;
 /**
  * Created by eduu on 20/03/16.
  */
-public class Pattern {
+public class Token {
     private ArrayList<String> characters;
     private int quantificationMaxValue;
-    private int quantificactionMinValue;
-    private boolean literal;
+    private int quantificationMinValue;
+    private boolean isASpecialCharacter;
 
-    public Pattern(String regex, int maxNumber) {
+    // This constructor sets the available characters of the string and its quantification
+    // The specialCharacter boolean is used to know whether the regex refers to the literal or not
+    public Token(String regex, int maxNumber) {
         this.characters = new ArrayList<>();
-        this.literal = false;
+        this.isASpecialCharacter = false;
 
         if (regex.charAt(0) == '\\') {
-            this.literal = true;
+            this.isASpecialCharacter = true;
             characters.add(regex.substring(1,2));
             if (regex.length() == 3) {
                 this.setQuantifiers(regex.charAt(regex.length() - 1),maxNumber);
@@ -36,13 +38,13 @@ public class Pattern {
     public String generateMatchingString() {
         String matchingString = "";
 
-        for (int i = 0; i < this.getRandomNumberBetween(quantificactionMinValue,quantificationMaxValue); i++) {
+        for (int i = 0; i < this.getRandomNumberBetween(quantificationMinValue,quantificationMaxValue); i++) {
             int numberOfCharacters = this.characters.size();
             if (numberOfCharacters > 1) {
                 int index = this.getRandomNumberBetween(0,numberOfCharacters - 1);
                 matchingString = matchingString.concat(this.characters.get(index));
             } else {
-                if (!this.literal && this.characters.get(0) == ".") {
+                if (!this.isASpecialCharacter && this.characters.get(0) == ".") {
                     char character = (char) this.getRandomNumberBetween(0,255);
                     matchingString = matchingString.concat(String.valueOf(character));
                 } else {
@@ -54,6 +56,7 @@ public class Pattern {
         return matchingString;
     }
 
+    // Set considers literals inside it
     private void addSet(String set) {
         int offset = 1;
         int setLength = set.length() - 1;
@@ -75,17 +78,18 @@ public class Pattern {
 
     private void setQuantifiers(char character, int maxNumber) {
         this.quantificationMaxValue = 1;
-        this.quantificactionMinValue = 1;
+        this.quantificationMinValue = 1;
         if (character == '+') {
             this.quantificationMaxValue = maxNumber;
         } else if (character == '?') {
-            this.quantificactionMinValue = 0;
+            this.quantificationMinValue = 0;
         } else if (character == '*') {
-            this.quantificactionMinValue = 0;
+            this.quantificationMinValue = 0;
             this.quantificationMaxValue = maxNumber;
         }
     }
 
+    //Function from internet
     private int getRandomNumberBetween(int numberA, int numberB) {
         Random generator = new Random();
         long range = (long) numberB - (long) numberA + 1;
