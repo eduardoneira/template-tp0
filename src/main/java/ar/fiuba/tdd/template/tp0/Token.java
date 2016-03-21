@@ -45,7 +45,7 @@ public class Token {
                 matchingString = matchingString.concat(this.characters.get(index));
             } else {
                 if (!this.isASpecialCharacter && this.characters.get(0) == ".") {
-                    char character = (char) this.getRandomNumberBetween(0,255);
+                    char character = this.getRandomAscii();
                     matchingString = matchingString.concat(String.valueOf(character));
                 } else {
                     matchingString = matchingString.concat(this.characters.get(0));
@@ -94,7 +94,20 @@ public class Token {
         Random generator = new Random();
         long range = (long) numberB - (long) numberA + 1;
         long fraction = (long) (range * generator.nextDouble());
-        return (int) (fraction + numberA);
+        int  returnNumber = (int) (fraction + numberA);
+
+        return returnNumber;
+    }
+
+    private char getRandomAscii() {
+        int  asciiNumber = this.getRandomNumberBetween(0,255);
+
+        //Apparently not all ascii are suitable for a regex '.', I found these three
+        //but there may be more
+        while (asciiNumber == 10 || asciiNumber == 13 || asciiNumber == 133) {
+            asciiNumber = this.getRandomNumberBetween(0,255);
+        }
+        return (char) asciiNumber;
     }
 
 }
